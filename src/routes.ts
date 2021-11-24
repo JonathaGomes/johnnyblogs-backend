@@ -1,4 +1,5 @@
-import { Router, Response, Request, NextFunction } from "express";
+import { Router } from "express";
+import { verifyJWT } from "@/middlewares";
 import jwt from "jsonwebtoken";
 const router = Router();
 
@@ -43,22 +44,6 @@ const posts = [
     tags: ["nodejs", "api", "javascript"],
   },
 ];
-
-function verifyJWT(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ error: "Access denied. No token provided." });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET);
-    req.body.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid token." });
-  }
-}
 
 router.get("/", (req, res) => {
   return res.json({ message: "Hello World" });
