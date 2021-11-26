@@ -1,7 +1,12 @@
 import { Router } from "express";
-import { verifyJWT } from "@/middlewares";
+import { verifyJWT } from "./middlewares";
 import jwt from "jsonwebtoken";
+
+import { CreateUserController } from "./controllers/CreateUserController";
+
 const router = Router();
+
+const createUserController = new CreateUserController();
 
 const posts = [
   {
@@ -39,9 +44,7 @@ router.get("/posts", (req, res) => {
   return res.json(posts);
 });
 
-router.post("/signin", (req, res) => {
-  const { name, email, password } = req.body;
-});
+router.post("/users", createUserController.handle);
 
 //router.post("/login", (req, res) => {
 //  const { user, pass } = req.body;
