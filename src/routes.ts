@@ -3,24 +3,6 @@ import { verifyJWT } from "@/middlewares";
 import jwt from "jsonwebtoken";
 const router = Router();
 
-const users = [
-  {
-    id: 1,
-    user: "jonatha@gmail.com",
-    password: "123456",
-  },
-  {
-    id: 2,
-    user: "paulo@gmail.com",
-    password: "654321",
-  },
-  {
-    id: 3,
-    user: "ednardo@gmail.com",
-    password: "abcdef",
-  },
-];
-
 const posts = [
   {
     id: 1,
@@ -57,34 +39,31 @@ router.get("/posts", (req, res) => {
   return res.json(posts);
 });
 
-router.post("/login", (req, res) => {
-  const { user, pass } = req.body;
-
-  const userExists = users.find((u) => u.user === user);
-
-  if (!userExists) {
-    return res.status(401).json({ error: "User not found." });
-  }
-
-  if (userExists) {
-    const userL = users.find((u) => u.user === user && u.password === pass);
-
-    if (!userL) {
-      return res.status(401).json({ error: "Password does not match." });
-    }
-
-    const token = jwt.sign({ userId: userExists.id }, process.env.SECRET);
-    return res.json({ token });
-  }
-
-  return res.status(401).json({ message: "Unauthorized" });
+router.post("/signin", (req, res) => {
+  const { name, email, password } = req.body;
 });
 
-router.get("/me", verifyJWT, (req, res) => {
-  const { user } = req.body;
-  const userLogged = users.find((u) => u.id === user.userId);
-  console.log(userLogged);
-  return res.json({ message: `Hello ${userLogged?.user}` });
-});
+//router.post("/login", (req, res) => {
+//  const { user, pass } = req.body;
+
+//  const userExists = users.find((u) => u.user === user);
+
+//  if (!userExists) {
+//    return res.status(401).json({ error: "User not found." });
+//  }
+
+//  if (userExists) {
+//    const userL = users.find((u) => u.user === user && u.password === pass);
+
+//    if (!userL) {
+//      return res.status(401).json({ error: "Password does not match." });
+//    }
+
+//    const token = jwt.sign({ userId: userExists.id }, process.env.SECRET);
+//    return res.json({ token });
+//  }
+
+//  return res.status(401).json({ message: "Unauthorized" });
+//});
 
 export { router };
