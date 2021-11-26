@@ -17,7 +17,6 @@ export function ensureAuthenticated(
   }
 
   const [token] = authToken.split(" ");
-  console.log(token);
 
   try {
     const { sub } = verify(
