@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { CreatePostService } from "../services/CreatePostService";
 
-class CreateComplimenteController {
+class CreatePostController {
   async handle(request: Request, response: Response) {
-    const { title, content, tags, author } = request.body;
+    const { title, content, tags } = request.body;
     const { user_id } = request;
 
     const createPostService = new CreatePostService();
@@ -19,4 +19,4 @@ class CreateComplimenteController {
   }
 }
 
-export { CreateComplimenteController };
+export { CreatePostController };
