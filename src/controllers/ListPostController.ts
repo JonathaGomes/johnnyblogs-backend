@@ -3,19 +3,32 @@ import { ListPostsService } from "../services/ListPostsService";
 
 class ListPostsController {
   async handle(request: Request, response: Response) {
+    const { tags } = request.query;
+
     const listPostsService = new ListPostsService();
 
-    let posts = await listPostsService.execute();
-    posts = posts.map((post) => {
+    const posts = await listPostsService.execute();
+
+    const postsFormated = posts.map((post) => {
       return {
         ...post,
         tags: post.tags.split(","),
       };
     });
 
-    console.log(posts);
+    const postsFiltered = tags
+      ? postsFormated.filter((post) => {
+          if (Array.isArray(tags)) {
+            return tags.map((tag) => {
+              return post.tags.includes(tag);
+            });
+          } else {
+            return post.tags.includes(tags);
+          }
+        })
+      : postsFormated;
 
-    return response.json(posts);
+    return response.json(postsFiltered);
   }
 }
 
