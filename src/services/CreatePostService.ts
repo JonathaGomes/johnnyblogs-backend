@@ -27,8 +27,6 @@ class CreatePostService {
       tags,
     });
 
-    console.log(userAuthorExists.id);
-
     await postsRepositories.save(post);
 
     return post;

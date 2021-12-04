@@ -1,14 +1,29 @@
 import { getCustomRepository } from "typeorm";
 import { PostsRepositories } from "../repositories/PostsRepositories";
+import { UsersRepositories } from "../repositories/UsersRepositories";
 import { classToPlain } from "class-transformer";
 
 class ListPostsService {
   async execute() {
     const postsRepositories = getCustomRepository(PostsRepositories);
+    const usersRepositories = getCustomRepository(UsersRepositories);
 
-    const tags = await postsRepositories.find();
+    const posts = await postsRepositories.find();
 
-    return classToPlain(tags);
+    const postsFormatted = posts.map(async (post) => {
+      const user = await usersRepositories.findOne({
+        id: post.author,
+      });
+
+      const newPost = {
+        ...classToPlain(post),
+        author: user.name,
+      };
+
+      return newPost;
+    });
+
+    return classToPlain(posts);
   }
 }
 
