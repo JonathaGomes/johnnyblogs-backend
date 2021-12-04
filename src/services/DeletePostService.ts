@@ -3,13 +3,10 @@ import { PostsRepositories } from "../repositories/PostsRepositories";
 
 interface IComplimentRequest {
   post_id: string;
-  title: string;
-  content: string;
-  tags: string[];
 }
 
-class UpdatePostService {
-  async execute({ post_id, title, content, tags }: IComplimentRequest) {
+class DeletePostService {
+  async execute({ post_id }: IComplimentRequest) {
     const postsRepositories = getCustomRepository(PostsRepositories);
 
     const post = await postsRepositories.findOne(post_id);
@@ -18,18 +15,10 @@ class UpdatePostService {
       throw new Error("Post not found");
     }
 
-    const updatedPost = {
-      ...post,
-      title,
-      content,
-      tags,
-      updated_at: new Date(),
-    };
+    await postsRepositories.remove(post);
 
-    await postsRepositories.save(updatedPost);
-
-    return updatedPost;
+    return;
   }
 }
 
-export { UpdatePostService };
+export { DeletePostService };
