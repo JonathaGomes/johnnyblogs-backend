@@ -2,7 +2,7 @@ import { getCustomRepository } from "typeorm";
 import { PostsRepositories } from "../repositories/PostsRepositories";
 import { UsersRepositories } from "../repositories/UsersRepositories";
 
-interface IComplimentResquest {
+interface IComplimentRequest {
   title: string;
   content: string;
   tags: string[];
@@ -10,7 +10,7 @@ interface IComplimentResquest {
 }
 
 class CreatePostService {
-  async execute({ title, content, tags, author }: IComplimentResquest) {
+  async execute({ title, content, tags, author }: IComplimentRequest) {
     const postsRepositories = getCustomRepository(PostsRepositories);
     const usersRepositories = getCustomRepository(UsersRepositories);
 
@@ -21,11 +21,13 @@ class CreatePostService {
     }
 
     const post = postsRepositories.create({
-      author: userAuthorExists,
+      author: userAuthorExists.id,
       title,
       content,
       tags,
     });
+
+    console.log(userAuthorExists.id);
 
     await postsRepositories.save(post);
 

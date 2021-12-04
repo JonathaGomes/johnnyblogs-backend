@@ -24,9 +24,12 @@ class Post {
   @Column("text", { array: true })
   tags: string[];
 
+  @Column()
+  author: string;
+
   @JoinColumn({ name: "author" })
   @OneToOne(() => User)
-  author: User;
+  Author: User;
 
   @CreateDateColumn()
   created_at: Date;
