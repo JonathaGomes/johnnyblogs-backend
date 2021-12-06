@@ -1,7 +1,7 @@
 import { getCustomRepository } from "typeorm";
 import { PostsRepositories } from "../repositories/PostsRepositories";
 import { UsersRepositories } from "../repositories/UsersRepositories";
-import { classToPlain } from "class-transformer";
+import { instanceToPlain } from "class-transformer";
 
 class ListPostsService {
   async execute() {
@@ -9,21 +9,18 @@ class ListPostsService {
     const usersRepositories = getCustomRepository(UsersRepositories);
 
     const posts = await postsRepositories.find();
+    const users = await usersRepositories.find();
 
-    const postsFormatted = posts.map(async (post) => {
-      const user = await usersRepositories.findOne({
-        id: post.author,
-      });
+    const postsFormatted = posts.map((post) => {
+      const user = users.find((user) => user.id === post.author);
 
-      const newPost = {
-        ...classToPlain(post),
+      return {
+        ...instanceToPlain(post),
         author: user.name,
       };
-
-      return newPost;
     });
 
-    return classToPlain(posts);
+    return instanceToPlain(postsFormatted);
   }
 }
 
